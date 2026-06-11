@@ -8,84 +8,82 @@
 </head>
 <body>
 
-<div class="container">
-    <div id="loginWrapper" class="login-wrapper">
-        <div id="loginSection">
-            <h2>HỆ THỐNG QUẢN LÝ</h2>
-            <div class="login-subtitle">Đăng nhập tài khoản cán bộ thu thuế địa bàn</div>
-            
-            <div class="input-group">
-                <label for="loginUsername">🔑 Tên đăng nhập (Username)</label>
-                <input type="text" id="loginUsername" placeholder="Nhập tài khoản của bạn..." required>
-            </div>
-            
-            <div class="input-group">
-                <label for="loginPassword">🔒 Mật khẩu (Password)</label>
-                <input type="password" id="loginPassword" placeholder="Nhập mật khẩu..." required>
-            </div>
-            
-            <button onclick="loginWithUsernamePassword()">Đăng nhập hệ thống</button>
-        </div>
-    </div>
-
-    <div id="mainSection" class="hidden">
-        <div class="main-header">
-            <h2>Hệ Thống Quản Lý Thu Thuế</h2>
-            <div class="user-info-box">
-                <span id="txtLoginUser" class="user-name">👤 Đang tải...</span>
-                <button onclick="logout()" class="btn-cancel">Đăng xuất</button>
-            </div>
+<div id="loginWrapper" class="login-wrapper">
+    <div id="loginSection">
+        <h2>HỆ THỐNG QUẢN LÝ</h2>
+        <div class="login-subtitle">Đăng nhập tài khoản cán bộ thu thuế địa bàn</div>
+        
+        <div class="input-group">
+            <label for="loginUsername">🔑 Tên đăng nhập (Username)</label>
+            <input type="text" id="loginUsername" placeholder="Nhập tài khoản của bạn..." required>
         </div>
         
-        <div class="filter-box">
-            <div class="filter-item">
-                <label>Phường/Xã:</label>
-                <select id="filterPhuongXa" onchange="updateThonToCombobox()">
-                    <option value="">-- Tất cả Phường/Xã --</option>
-                </select>
-            </div>
+        <div class="input-group">
+            <label for="loginPassword">🔒 Mật khẩu (Password)</label>
+            <input type="password" id="loginPassword" placeholder="Nhập mật khẩu..." required>
+        </div>
+        
+        <button onclick="loginWithUsernamePassword()">Đăng nhập hệ thống</button>
+    </div>
+</div>
 
-            <div class="filter-item">
-                <label>Thôn/Tổ:</label>
-                <select id="filterThonTo">
-                    <option value="">-- Tất cả Thôn/Tổ --</option>
-                </select>
-            </div>
-
-            <div class="filter-item">
-                <label>Trạng thái:</label>
-                <select id="filterTrangThai">
-                    <option value="">-- Tất cả Trạng thái --</option>
-                    <option value="true">Đã thanh toán</option>
-                    <option value="false">Chưa thanh toán</option>
-                </select>
-            </div>
-
-            <button onclick="searchData()" class="btn-search">Tìm kiếm</button>
+<div id="mainSection" class="main-container hidden">
+    <div class="main-header">
+        <h2>Hệ Thống Quản Lý Thu Thuế</h2>
+        <div class="user-info-box">
+            <span id="txtLoginUser" class="user-name">👤 Đang tải...</span>
+            <button onclick="logout()" class="btn-logout">Đăng xuất</button>
+        </div>
+    </div>
+    
+    <div class="filter-box">
+        <div class="filter-item">
+            <label>Phường/Xã:</label>
+            <select id="filterPhuongXa" onchange="updateThonToCombobox()">
+                <option value="">-- Tất cả Phường/Xã --</option>
+            </select>
         </div>
 
-        <div class="table-responsive">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Mã số thuế</th>
-                        <th>Họ và Tên</th>
-                        <th>Thôn Tổ</th>
-                        <th>Phường Xã</th>
-                        <th>Mã Nhóm (Branch)</th>
-                        <th>Số tiền cần nộp</th>
-                        <th>Trạng thái</th>
-                    </tr>
-                </thead>
-                <tbody id="taxTableBody"></tbody>
-            </table>
+        <div class="filter-item">
+            <label>Thôn/Tổ:</label>
+            <select id="filterThonTo">
+                <option value="">-- Tất cả Thôn/Tổ --</option>
+            </select>
         </div>
 
-        <div class="pagination-box">
-            <button onclick="prevPage()" id="btnPrev">◀ Trang trước</button>
-            <span id="pageInfo" class="page-info">Trang 1 / 1</span>
-            <button onclick="nextPage()" id="btnNext">Trang sau ▶</button>
+        <div class="filter-item">
+            <label>Trạng thái:</label>
+            <select id="filterTrangThai">
+                <option value="">-- Tất cả Trạng thái --</option>
+                <option value="true">Đã thanh toán</option>
+                <option value="false">Chưa thanh toán</option>
+            </select>
         </div>
+
+        <button onclick="searchData()" class="btn-search">Tìm kiếm</button>
+    </div>
+
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>Mã số thuế</th>
+                    <th>Họ và Tên</th>
+                    <th>Thôn Tổ</th>
+                    <th>Phường Xã</th>
+                    <th>Mã Nhóm (Branch)</th>
+                    <th>Số tiền cần nộp</th>
+                    <th>Trạng thái</th>
+                </tr>
+            </thead>
+            <tbody id="taxTableBody"></tbody>
+        </table>
+    </div>
+
+    <div class="pagination-box">
+        <button onclick="prevPage()" id="btnPrev">◀ Trang trước</button>
+        <span id="pageInfo" class="page-info">Trang 1 / 1</span>
+        <button onclick="nextPage()" id="btnNext">Trang sau ▶</button>
     </div>
 </div>
 
