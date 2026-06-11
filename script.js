@@ -34,17 +34,17 @@ window.onload = function() {
 function checkLoginStatus() {
     const loginWrapper = document.getElementById('loginWrapper');
     const mainSection = document.getElementById('mainSection');
+    const qrPopup = document.getElementById('qrPopup');
     
     if (currentUser) {
-        if (loginWrapper) loginWrapper.classList.add('hidden'); // Ẩn hoàn toàn màn hình login
-        if (mainSection) mainSection.classList.remove('hidden'); // Hiện bảng dữ liệu thuế
+        if (loginWrapper) loginWrapper.classList.add('hidden'); // Ẩn màn hình đăng nhập
+        if (mainSection) mainSection.classList.remove('hidden'); // Hiện giao diện quản lý thuế
         document.getElementById('txtLoginUser').innerText = `👤 ${currentUser.username} (${currentUser.Branch})`;
         fetchTaxData(); 
     } else {
-        if (loginWrapper) loginWrapper.classList.remove('hidden'); // Hiện màn hình login
-        if (mainSection) mainSection.classList.add('hidden'); // Ẩn bảng dữ liệu thuế
-        const qrPopup = document.getElementById('qrPopup');
-        if (qrPopup) qrPopup.classList.add('hidden'); 
+        if (loginWrapper) loginWrapper.classList.remove('hidden'); // Hiện màn hình đăng nhập
+        if (mainSection) mainSection.classList.add('hidden'); // Ẩn giao diện chính
+        if (qrPopup) qrPopup.classList.add('hidden'); // Ẩn popup
     }
 }
 
@@ -58,7 +58,6 @@ function loginWithUsernamePassword() {
         return;
     }
 
-    // Kiểm tra trực tiếp trên bảng "users" từ Firebase
     db.ref('users/' + userInp).once('value').then((snapshot) => {
         const userData = snapshot.val();
         if (userData && userData.password === passInp) {
@@ -66,7 +65,6 @@ function loginWithUsernamePassword() {
                 username: userData.username,
                 Branch: userData.Branch
             };
-            // Lưu phiên đăng nhập tạm thời vào trình duyệt
             sessionStorage.setItem('customUser', JSON.stringify(currentUser));
             checkLoginStatus();
         } else {
@@ -83,7 +81,7 @@ function logout() {
     location.reload();
 }
 
-// CHỈ LẤY DỮ LIỆU THUỘC ĐỊA BÀN (BRANCH) CỦA CÁN BỘ ĐÓ
+// LẤY DỮ LIỆU THUỘC ĐỊA BÀN (BRANCH) CỦA CÁN BỘ ĐÓ
 function fetchTaxData() {
     if (!currentUser || !currentUser.Branch) return;
 
@@ -96,7 +94,7 @@ function fetchTaxData() {
                     let item = data[id];
                     if (!item.ID) item.ID = id; 
                     
-                    // BỘ LỌC ĐỊA BÀN CHIẾN LƯỢC: User thuộc Branch nào chỉ nạp data của Branch đó
+                    // Lọc theo chi nhánh địa bàn
                     if (item.Branch === currentUser.Branch) {
                         allData.push(item);
                     }
