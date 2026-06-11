@@ -36,18 +36,19 @@ function checkLoginStatus() {
     const mainSection = document.getElementById('mainSection');
     
     if (currentUser) {
-        if (loginWrapper) loginWrapper.classList.add('hidden'); // Ẩn hoàn toàn màn hình login nền xám
-        if (mainSection) mainSection.classList.remove('hidden'); // Hiện bảng dữ liệu thuế sạch sẽ
+        if (loginWrapper) loginWrapper.classList.add('hidden'); // Ẩn hoàn toàn màn hình login
+        if (mainSection) mainSection.classList.remove('hidden'); // Hiện bảng dữ liệu thuế
         document.getElementById('txtLoginUser').innerText = `👤 ${currentUser.username} (${currentUser.Branch})`;
         fetchTaxData(); 
     } else {
         if (loginWrapper) loginWrapper.classList.remove('hidden'); // Hiện màn hình login
         if (mainSection) mainSection.classList.add('hidden'); // Ẩn bảng dữ liệu thuế
-        document.getElementById('qrPopup').classList.add('hidden'); 
+        const qrPopup = document.getElementById('qrPopup');
+        if (qrPopup) qrPopup.classList.add('hidden'); 
     }
 }
 
-// CHỨC NĂNG MỚI: ĐĂNG NHẬP BẰNG TÀI KHOẢN DATABASE CÓ PHÂN CHIA BRANCH
+// ĐĂNG NHẬP BẰNG TÀI KHOẢN DATABASE CÓ PHÂN CHIA BRANCH
 function loginWithUsernamePassword() {
     const userInp = document.getElementById('loginUsername').value.trim();
     const passInp = document.getElementById('loginPassword').value.trim();
@@ -82,7 +83,7 @@ function logout() {
     location.reload();
 }
 
-// CẬP NHẬT: CHỈ LẤY DỮ LIỆU THUỘC ĐỊA BÀN (BRANCH) CỦA CÁN BỘ ĐÓ
+// CHỈ LẤY DỮ LIỆU THUỘC ĐỊA BÀN (BRANCH) CỦA CÁN BỘ ĐÓ
 function fetchTaxData() {
     if (!currentUser || !currentUser.Branch) return;
 
@@ -179,15 +180,15 @@ function renderTable() {
         tr.onclick = () => handleRowClick(item);
 
         const statusText = item.DaThanhToan === true || item.DaThanhToan === "true" || item.DaThanhToan === 1
-            ? "<b style='color:green;'>Đã thanh toán</b>" 
-            : "<b style='color:red;'>Chưa thanh toán</b>";
+            ? "<b style='color:#10b981;'>Đã thanh toán</b>" 
+            : "<b style='color:#ef4444;'>Chưa thanh toán</b>";
         
         tr.innerHTML = `
             <td>${item.MaSoThue || ''}</td>
             <td>${item.Ho || ''} ${item.Ten || ''}</td>
             <td>${item.ThonTo || ''}</td>
             <td>${item.PhuongXa || ''}</td>
-            <td><span style="background: #e0e7ff; color: #4338ca; padding: 2px 8px; border-radius: 4px; font-weight: bold; font-size:12px;">${item.Branch || 'N/A'}</span></td>
+            <td><span style="background: #e0e7ff; color: #4338ca; padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size:12px;">${item.Branch || 'N/A'}</span></td>
             <td>${item.SoTienThuThue ? Number(item.SoTienThuThue).toLocaleString('vi-VN') : 0} đ</td>
             <td>${statusText}</td>
         `;
