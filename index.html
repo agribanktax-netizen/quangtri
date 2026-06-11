@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Quản Lý Thu Thuế Đất - Phân Quyền Địa Bàn</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -81,17 +81,19 @@
     </div>
 
     <div class="pagination-box">
-        <button onclick="prevPage()" id="btnPrev">◀ Trang trước</button>
+        <button onclick="prevPage()" id="btnPrev">◀ Trước</button>
         <span id="pageInfo" class="page-info">Trang 1 / 1</span>
-        <button onclick="nextPage()" id="btnNext">Trang sau ▶</button>
+        <button onclick="nextPage()" id="btnNext">Sau ▶</button>
     </div>
 </div>
 
 <div id="qrPopup" class="popup-overlay hidden">
     <div class="popup-content">
         <h3>Mã QR Thanh Toán Thuế</h3>
-        <p id="qrInfo"></p>
-        <img id="qrImage" class="qr-img" src="" alt="Mã QR Chuyển Khoản">
+        <div id="qrInfo"></div>
+        <div class="qr-container">
+            <img id="qrImage" class="qr-img" src="" alt="Mã QR Chuyển Khoản">
+        </div>
         
         <div class="confirm-zone" onclick="toggleCheckbox()">
             <input type="checkbox" id="chkPaymentConfirm" onclick="event.stopPropagation(); verifyAndPay()">
