@@ -5,44 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản Lý Thu Thuế Đất - Phân Quyền Địa Bàn</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        .pagination-box {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
-            margin-top: 20px;
-            padding-top: 10px;
-        }
-        .pagination-box button {
-            min-width: 45px;
-            padding: 8px 14px;
-            margin: 0;
-        }
-        .pagination-box button:disabled {
-            background-color: #cbd5e1;
-            cursor: not-allowed;
-            transform: none;
-        }
-        .page-info {
-            font-size: 14px;
-            font-weight: 600;
-            color: #334155;
-            min-width: 100px;
-            text-align: center;
-        }
-        /* Style cho Form Đăng nhập mới */
-        .login-form {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        .login-form h2 { margin-top: 0; color: #1e293b; }
-        .login-form input { width: 100%; margin: 8px 0; }
-        .login-form button { width: 100%; margin-top: 12px; background-color: #4f46e5; }
-        .login-form button:hover { background-color: #4338ca; }
-    </style>
 </head>
 <body>
 
@@ -71,45 +33,53 @@
             <h2>Hệ Thống Quản Lý Thu Thuế</h2>
             <div class="user-info-box">
                 <span id="txtLoginUser" class="user-name">👤 Đang tải...</span>
-                <button onclick="logout()" class="btn-cancel" style="width: auto; margin:0;">Đăng xuất</button>
+                <button onclick="logout()" class="btn-cancel">Đăng xuất</button>
             </div>
         </div>
         
         <div class="filter-box">
-            <label>Phường/Xã:</label>
-            <select id="filterPhuongXa" onchange="updateThonToCombobox()">
-                <option value="">-- Tất cả Phường/Xã --</option>
-            </select>
+            <div class="filter-item">
+                <label>Phường/Xã:</label>
+                <select id="filterPhuongXa" onchange="updateThonToCombobox()">
+                    <option value="">-- Tất cả Phường/Xã --</option>
+                </select>
+            </div>
 
-            <label>Thôn/Tổ:</label>
-            <select id="filterThonTo">
-                <option value="">-- Tất cả Thôn/Tổ --</option>
-            </select>
+            <div class="filter-item">
+                <label>Thôn/Tổ:</label>
+                <select id="filterThonTo">
+                    <option value="">-- Tất cả Thôn/Tổ --</option>
+                </select>
+            </div>
 
-            <label>Trạng thái:</label>
-            <select id="filterTrangThai">
-                <option value="">-- Tất cả Trạng thái --</option>
-                <option value="true">Đã thanh toán</option>
-                <option value="false">Chưa thanh toán</option>
-            </select>
+            <div class="filter-item">
+                <label>Trạng thái:</label>
+                <select id="filterTrangThai">
+                    <option value="">-- Tất cả Trạng thái --</option>
+                    <option value="true">Đã thanh toán</option>
+                    <option value="false">Chưa thanh toán</option>
+                </select>
+            </div>
 
-            <button onclick="searchData()" style="background-color: #10b981;">Tìm kiếm</button>
+            <button onclick="searchData()" class="btn-search">Tìm kiếm</button>
         </div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Mã số thuế</th>
-                    <th>Họ và Tên</th>
-                    <th>Thôn Tổ</th>
-                    <th>Phường Xã</th>
-                    <th>Mã Nhóm (Branch)</th>
-                    <th>Số tiền cần nộp</th>
-                    <th>Trạng thái</th>
-                </tr>
-            </thead>
-            <tbody id="taxTableBody"></tbody>
-        </table>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mã số thuế</th>
+                        <th>Họ và Tên</th>
+                        <th>Thôn Tổ</th>
+                        <th>Phường Xã</th>
+                        <th>Mã Nhóm (Branch)</th>
+                        <th>Số tiền cần nộp</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody id="taxTableBody"></tbody>
+            </table>
+        </div>
 
         <div class="pagination-box">
             <button onclick="prevPage()" id="btnPrev">◀ Trang trước</button>
@@ -122,15 +92,15 @@
 <div id="qrPopup" class="popup-overlay hidden">
     <div class="popup-content">
         <h3>Mã QR Thanh Toán Thuế</h3>
-        <p id="qrInfo" style="text-align: left; font-size: 14px; line-height: 1.5; background: #f8fafc; padding: 10px; border-radius: 6px;"></p>
+        <p id="qrInfo"></p>
         <img id="qrImage" class="qr-img" src="" alt="Mã QR Chuyển Khoản">
         
         <div class="confirm-zone" onclick="toggleCheckbox()">
             <input type="checkbox" id="chkPaymentConfirm" onclick="event.stopPropagation(); verifyAndPay()">
-            <label for="chkPaymentConfirm" style="cursor: pointer;">Xác nhận đã chuyển khoản thành công</label>
+            <label for="chkPaymentConfirm">Xác nhận đã chuyển khoản thành công</label>
         </div>
 
-        <button onclick="closePopup()" class="btn-cancel">Quay trở lại (Cancel)</button>
+        <button onclick="closePopup()" class="btn-popup-close">Quay trở lại (Cancel)</button>
     </div>
 </div>
 
