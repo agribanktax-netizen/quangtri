@@ -17,7 +17,12 @@ const auth = firebase.auth();
 const db = firebase.database();
 
 let allData = [];
+let filteredData = []; // Lưu trữ dữ liệu sau khi đã lọc để phục vụ phân trang
 let currentSelectedCustomerId = null; 
+
+// CẤU HÌNH PHÂN TRANG
+let currentPage = 1;
+const rowsPerPage = 10;
 
 // LẮNG NGHE TRẠNG THÁI ĐĂNG NHẬP ĐỂ LẤY TÊN USER
 auth.onAuthStateChanged((user) => {
@@ -39,16 +44,6 @@ auth.onAuthStateChanged((user) => {
         console.error(e);
     }
 });
-
-function login() {
-    const email = document.getElementById('loginEmail').value;
-    const pass = document.getElementById('loginPassword').value;
-    if(!email || !pass) {
-        alert("Vui lòng điền đầy đủ Email và Mật khẩu!");
-        return;
-    }
-    auth.signInWithEmailAndPassword(email, pass).catch(err => alert("Lỗi: " + err.message));
-}
 
 function loginWithGoogle() {
     const provider = new firebase.auth.GoogleAuthProvider();
@@ -108,27 +103,47 @@ function updateThonToCombobox() {
     if(uniqueThonTo.includes(currentTt)) thonToSelect.value = currentTt;
 }
 
+// CẬP NHẬT: LOGIC TÌM KIẾM ĐÃ BAO GỒM TRẠNG THÁI
 function searchData() {
     const pxValue = document.getElementById('filterPhuongXa').value;
     const ttValue = document.getElementById('filterThonTo').value;
+    const statusValue = document.getElementById('filterTrangThai').value; // Lấy giá trị bộ lọc trạng thái
 
-    let result = allData;
-    if (pxValue) result = result.filter(item => item.PhuongXa === pxValue);
-    if (ttValue) result = result.filter(item => item.ThonTo === ttValue);
+    filteredData = allData;
 
-    renderTable(result);
+    if (pxValue) filteredData = filteredData.filter(item => item.PhuongXa === pxValue);
+    if (ttValue) filteredData = filteredData.filter(item => item.ThonTo === ttValue);
+    
+    // Lọc theo trạng thái Đã/Chưa thanh toán
+    if (statusValue !== "") {
+        const isPaid = statusValue === "true";
+        filteredData = filteredData.filter(item => {
+            const itemStatus = item.DaThanhToan === true || item.DaThanhToan === "true" || item.DaThanhToan === 1;
+            return itemStatus === isPaid;
+        });
+    }
+
+    currentPage = 1; // Khởi tạo lại về trang 1 sau khi tìm kiếm
+    renderTable();
 }
 
-function renderTable(dataList) {
+// CẬP NHẬT: LOGIC RENDER TÍCH HỢP PHÂN TRANG (10 dòng / trang)
+function renderTable() {
     const tbody = document.getElementById('taxTableBody');
     tbody.innerHTML = "";
 
-    if(!dataList || dataList.length === 0) {
+    if (!filteredData || filteredData.length === 0) {
         tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">Không tìm thấy dữ liệu phù hợp</td></tr>`;
+        updatePaginationControls(0);
         return;
     }
 
-    dataList.forEach(item => {
+    // Tính toán vị trí dòng bắt đầu và kết thúc của trang hiện tại
+    const startIndex = (currentPage - 1) * rowsPerPage;
+    const endIndex = startIndex + rowsPerPage;
+    const pageData = filteredData.slice(startIndex, endIndex);
+
+    pageData.forEach(item => {
         const tr = document.createElement('tr');
         tr.onclick = () => handleRowClick(item);
 
@@ -146,6 +161,34 @@ function renderTable(dataList) {
         `;
         tbody.appendChild(tr);
     });
+
+    updatePaginationControls(filteredData.length);
+}
+
+// CHỨC NĂNG MỚI: CẬP NHẬT TRẠNG THÁI THANH ĐIỀU HƯỚNG TRANG
+function updatePaginationControls(totalItems) {
+    const totalPages = Math.ceil(totalItems / rowsPerPage) || 1;
+    
+    document.getElementById('pageInfo').innerText = `Trang ${currentPage} / ${totalPages}`;
+    
+    // Bật/Tắt nút Prev và Next tùy thuộc vào trang hiện tại
+    document.getElementById('btnPrev').disabled = (currentPage === 1);
+    document.getElementById('btnNext').disabled = (currentPage === totalPages);
+}
+
+function prevPage() {
+    if (currentPage > 1) {
+        currentPage--;
+        renderTable();
+    }
+}
+
+function nextPage() {
+    const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+    if (currentPage < totalPages) {
+        currentPage++;
+        renderTable();
+    }
 }
 
 function handleRowClick(item) {
