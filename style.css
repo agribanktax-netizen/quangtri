@@ -2,7 +2,7 @@ body {
     font-family: 'Segoe UI', Arial, sans-serif; 
     margin: 0; 
     padding: 10px; 
-    background: url('https://images.pexels.com/photos/7731374/pexels-photo-7731374.jpeg') no-repeat center center fixed; 
+    background: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070') no-repeat center center fixed; 
     background-size: cover;
     min-height: 100vh;
     display: flex;
