@@ -4,8 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản Lý Thu Thuế Đất</title>
-    
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Bổ sung một chút style cho phần phân trang */
+        .pagination-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .pagination-box button {
+            min-width: 40px;
+            padding: 6px 12px;
+        }
+        .pagination-box button:disabled {
+            background-color: #cbd5e1;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .page-info {
+            font-size: 14px;
+            font-weight: 600;
+            color: #334155;
+        }
+    </style>
 </head>
 <body>
 
@@ -37,6 +60,13 @@
                 <option value="">-- Tất cả Thôn/Tổ --</option>
             </select>
 
+            <label>Trạng thái:</label>
+            <select id="filterTrangThai">
+                <option value="">-- Tất cả Trạng thái --</option>
+                <option value="true">Đã thanh toán</option>
+                <option value="false">Chưa thanh toán</option>
+            </select>
+
             <button onclick="searchData()" style="background-color: #10b981;">Tìm kiếm</button>
         </div>
 
@@ -53,6 +83,12 @@
             </thead>
             <tbody id="taxTableBody"></tbody>
         </table>
+
+        <div class="pagination-box">
+            <button onclick="prevPage()" id="btnPrev">◀</button>
+            <span id="pageInfo" class="page-info">Trang 1 / 1</span>
+            <button onclick="nextPage()" id="btnNext">▶</button>
+        </div>
     </div>
 </div>
 
@@ -74,7 +110,6 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-
 <script src="script.js"></script>
 </body>
 </html>
