@@ -19,14 +19,11 @@ let allData = [];
 let filteredData = []; 
 let currentSelectedCustomerId = null; 
 
-// QUẢN LÝ USER CỤC BỘ QUA SESSION STORAGE (Tránh mất login khi F5 trang)
 let currentUser = JSON.parse(sessionStorage.getItem('customUser')) || null;
 
-// CẤU HÌNH PHÂN TRANG 
 let currentPage = 1;
 const rowsPerPage = 10;
 
-// KIỂM TRA TRẠNG THÁI ĐĂNG NHẬP NGAY KHI TẢI TRANG
 window.onload = function() {
     checkLoginStatus();
 };
@@ -37,18 +34,17 @@ function checkLoginStatus() {
     const qrPopup = document.getElementById('qrPopup');
     
     if (currentUser) {
-        if (loginWrapper) loginWrapper.classList.add('hidden'); // Ẩn màn hình đăng nhập
-        if (mainSection) mainSection.classList.remove('hidden'); // Hiện giao diện quản lý thuế
+        if (loginWrapper) loginWrapper.classList.add('hidden'); 
+        if (mainSection) mainSection.classList.remove('hidden'); 
         document.getElementById('txtLoginUser').innerText = `👤 ${currentUser.username} (${currentUser.Branch})`;
         fetchTaxData(); 
     } else {
-        if (loginWrapper) loginWrapper.classList.remove('hidden'); // Hiện màn hình đăng nhập
-        if (mainSection) mainSection.classList.add('hidden'); // Ẩn giao diện chính
-        if (qrPopup) qrPopup.classList.add('hidden'); // Ẩn popup
+        if (loginWrapper) loginWrapper.classList.remove('hidden'); 
+        if (mainSection) mainSection.classList.add('hidden'); 
+        if (qrPopup) qrPopup.classList.add('hidden'); 
     }
 }
 
-// ĐĂNG NHẬP BẰNG TÀI KHOẢN DATABASE CÓ PHÂN CHIA BRANCH
 function loginWithUsernamePassword() {
     const userInp = document.getElementById('loginUsername').value.trim();
     const passInp = document.getElementById('loginPassword').value.trim();
@@ -81,7 +77,6 @@ function logout() {
     location.reload();
 }
 
-// LẤY DỮ LIỆU THUỘC ĐỊA BÀN (BRANCH) CỦA CÁN BỘ ĐÓ
 function fetchTaxData() {
     if (!currentUser || !currentUser.Branch) return;
 
@@ -94,7 +89,6 @@ function fetchTaxData() {
                     let item = data[id];
                     if (!item.ID) item.ID = id; 
                     
-                    // Lọc theo chi nhánh địa bàn
                     if (item.Branch === currentUser.Branch) {
                         allData.push(item);
                     }
@@ -235,7 +229,7 @@ function handleRowClick(item) {
     document.getElementById('qrInfo').innerHTML = `
         <b>Khách hàng:</b> ${item.Ho || ''} ${item.Ten || ''}<br>
         <b>Số tiền:</b> ${item.SoTienThuThue ? Number(item.SoTienThuThue).toLocaleString('vi-VN') : 0} đ<br>
-        <b>Nội dung CK:</b> ${purpose}
+        <b>Nội dung:</b> ${purpose}
     `;
     document.getElementById('qrImage').src = qrUrl;
     document.getElementById('qrPopup').classList.remove('hidden');
