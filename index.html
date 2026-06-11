@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản Lý Thu Thuế Đất</title>
+    <title>Quản Lý Thu Thuế Đất - Phân Quyền Địa Bàn</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* CSS bổ sung cho thanh phân trang */
         .pagination-box {
             display: flex;
             justify-content: center;
@@ -32,16 +31,27 @@
             min-width: 100px;
             text-align: center;
         }
+        /* Style cho Form Đăng nhập mới */
+        .login-form {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .login-form h2 { margin-top: 0; color: #1e293b; }
+        .login-form input { width: 100%; margin: 8px 0; }
+        .login-form button { width: 100%; margin-top: 12px; background-color: #4f46e5; }
+        .login-form button:hover { background-color: #4338ca; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div id="loginSection">
+    <div id="loginSection" class="login-form">
         <h2>Đăng nhập Hệ thống</h2>
-        <button onclick="loginWithGoogle()" style="background-color: #db4437; font-weight: bold; margin-top: 10px;">
-            🔴 Đăng nhập bằng Google
-        </button>
+        <input type="text" id="loginUsername" placeholder="Tên đăng nhập (Username)" required>
+        <input type="password" id="loginPassword" placeholder="Mật khẩu (Password)" required>
+        <button onclick="loginWithUsernamePassword()">Đăng nhập</button>
     </div>
 
     <div id="mainSection" class="hidden">
@@ -81,6 +91,7 @@
                     <th>Họ và Tên</th>
                     <th>Thôn Tổ</th>
                     <th>Phường Xã</th>
+                    <th>Mã Nhóm (Branch)</th>
                     <th>Số tiền cần nộp</th>
                     <th>Trạng thái</th>
                 </tr>
@@ -112,7 +123,6 @@
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 <script src="script.js"></script>
 </body>
