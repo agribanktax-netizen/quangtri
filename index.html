@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Thu Thuế Đất</title>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <div id="loginSection">
+        <h2>*Đăng nhập Hệ thống*</h2>
+        <button onclick="loginWithGoogle()" style="background-color: #db4437; font-weight: bold; margin-top: 10px;">
+            🔴 Đăng nhập bằng Google
+        </button>
+    </div>
+
+    <div id="mainSection" class="hidden">
+        <div class="main-header">
+            <h2>Hệ Thống Quản Lý Thu Thuế</h2>
+            <div class="user-info-box">
+                <span id="txtLoginUser" class="user-name">👤 Đang tải...</span>
+                <button onclick="logout()" class="btn-cancel" style="width: auto; margin:0;">Đăng xuất</button>
+            </div>
+        </div>
+        
+        <div class="filter-box">
+            <label>Phường/Xã:</label>
+            <select id="filterPhuongXa" onchange="updateThonToCombobox()">
+                <option value="">-- Tất cả Phường/Xã --</option>
+            </select>
+
+            <label>Thôn/Tổ:</label>
+            <select id="filterThonTo">
+                <option value="">-- Tất cả Thôn/Tổ --</option>
+            </select>
+
+            <button onclick="searchData()" style="background-color: #10b981;">Tìm kiếm</button>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Mã số thuế</th>
+                    <th>Họ và Tên</th>
+                    <th>Thôn Tổ</th>
+                    <th>Phường Xã</th>
+                    <th>Số tiền cần nộp</th>
+                    <th>Trạng thái</th>
+                </tr>
+            </thead>
+            <tbody id="taxTableBody"></tbody>
+        </table>
+    </div>
+</div>
+
+<div id="qrPopup" class="popup-overlay hidden">
+    <div class="popup-content">
+        <h3>Mã QR Thanh Toán Thuế</h3>
+        <p id="qrInfo" style="text-align: left; font-size: 14px; line-height: 1.5; background: #f8fafc; padding: 10px; border-radius: 6px;"></p>
+        <img id="qrImage" class="qr-img" src="" alt="Mã QR Chuyển Khoản">
+        
+        <div class="confirm-zone" onclick="toggleCheckbox()">
+            <input type="checkbox" id="chkPaymentConfirm" onclick="event.stopPropagation(); verifyAndPay()">
+            <label for="chkPaymentConfirm" style="cursor: pointer;">Xác nhận đã chuyển khoản thành công</label>
+        </div>
+
+        <button onclick="closePopup()" class="btn-cancel">Quay trở lại (Cancel)</button>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+<script src="script.js"></script>
+</body>
+</html>
