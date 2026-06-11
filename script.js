@@ -13,48 +13,76 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
 const db = firebase.database();
 
 let allData = [];
-let filteredData = []; // Mảng chứa dữ liệu sau khi lọc
+let filteredData = []; 
 let currentSelectedCustomerId = null; 
 
-// CẤU HÌNH PHÂN TRANG (Mặc định 10 dòng/trang)
+// QUẢN LÝ USER CỤC BỘ QUA SESSION STORAGE (Tránh mất login khi F5 trang)
+let currentUser = JSON.parse(sessionStorage.getItem('customUser')) || null;
+
+// CẤU HÌNH PHÂN TRANG 
 let currentPage = 1;
 const rowsPerPage = 10;
 
-// LẮNG NGHE TRẠNG THÁI ĐĂNG NHẬP
-auth.onAuthStateChanged((user) => {
-    try {
-        if (user) {
-            document.getElementById('loginSection').classList.add('hidden');
-            document.getElementById('mainSection').classList.remove('hidden');
-            
-            const displayName = user.displayName ? user.displayName : user.email;
-            document.getElementById('txtLoginUser').innerText = "👤 " + displayName;
+// KIỂM TRA TRẠNG THÁI ĐĂNG NHẬP NGAY KHI TẢI TRANG
+window.onload = function() {
+    checkLoginStatus();
+};
 
-            fetchTaxData(); 
-        } else {
-            document.getElementById('loginSection').classList.remove('hidden');
-            document.getElementById('mainSection').classList.add('hidden');
-            document.getElementById('qrPopup').classList.add('hidden'); 
-        }
-    } catch (e) {
-        console.error(e);
+function checkLoginStatus() {
+    if (currentUser) {
+        document.getElementById('loginSection').classList.add('hidden');
+        document.getElementById('mainSection').classList.remove('hidden');
+        document.getElementById('txtLoginUser').innerText = `👤 ${currentUser.username} (${currentUser.Branch})`;
+        fetchTaxData(); 
+    } else {
+        document.getElementById('loginSection').classList.remove('hidden');
+        document.getElementById('mainSection').classList.add('hidden');
+        document.getElementById('qrPopup').classList.add('hidden'); 
     }
-});
+}
 
-function loginWithGoogle() {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider).catch(err => alert("Lỗi: " + err.message));
+// CHỨC NĂNG MỚI: ĐĂNG NHẬP BẰNG TÀI KHOẢN DATABASE CÓ PHÂN CHIA BRANCH
+function loginWithUsernamePassword() {
+    const userInp = document.getElementById('loginUsername').value.trim();
+    const passInp = document.getElementById('loginPassword').value.trim();
+
+    if (!userInp || !passInp) {
+        alert("Vui lòng nhập đầy đủ Tài khoản và Mật khẩu!");
+        return;
+    }
+
+    // Kiểm tra trực tiếp trên bảng "users" từ Firebase
+    db.ref('users/' + userInp).once('value').then((snapshot) => {
+        const userData = snapshot.val();
+        if (userData && userData.password === passInp) {
+            currentUser = {
+                username: userData.username,
+                Branch: userData.Branch
+            };
+            // Lưu phiên đăng nhập tạm thời vào trình duyệt
+            sessionStorage.setItem('customUser', JSON.stringify(currentUser));
+            checkLoginStatus();
+        } else {
+            alert("Sai tài khoản hoặc mật khẩu. Vui lòng thử lại!");
+        }
+    }).catch(err => {
+        alert("Lỗi kết nối cơ sở dữ liệu: " + err.message);
+    });
 }
 
 function logout() {
-    auth.signOut().then(() => { location.reload(); });
+    sessionStorage.removeItem('customUser');
+    currentUser = null;
+    location.reload();
 }
 
+// CẬP NHẬT: CHỈ LẤY DỮ LIỆU THUỘC ĐỊA BÀN (BRANCH) CỦA CÁN BỘ ĐÓ
 function fetchTaxData() {
+    if (!currentUser || !currentUser.Branch) return;
+
     db.ref('QRCodeTax').on('value', (snapshot) => {
         try {
             const data = snapshot.val();
@@ -63,7 +91,11 @@ function fetchTaxData() {
                 for (let id in data) {
                     let item = data[id];
                     if (!item.ID) item.ID = id; 
-                    allData.push(item);
+                    
+                    // BỘ LỌC ĐỊA BÀN CHIẾN LƯỢC: User thuộc Branch nào chỉ nạp data của Branch đó
+                    if (item.Branch === currentUser.Branch) {
+                        allData.push(item);
+                    }
                 }
                 allData.sort((a, b) => new Date(b.InsertTime) - new Date(a.InsertTime));
             }
@@ -103,7 +135,6 @@ function updateThonToCombobox() {
     if(uniqueThonTo.includes(currentTt)) thonToSelect.value = currentTt;
 }
 
-// CẬP NHẬT: LOGIC TÌM KIẾM ĐÃ BAO GỒM TRẠNG THÁI
 function searchData() {
     const pxValue = document.getElementById('filterPhuongXa').value;
     const ttValue = document.getElementById('filterThonTo').value;
@@ -111,13 +142,9 @@ function searchData() {
 
     filteredData = allData;
 
-    // 1. Lọc theo Phường/Xã
     if (pxValue) filteredData = filteredData.filter(item => item.PhuongXa === pxValue);
-    
-    // 2. Lọc theo Thôn/Tổ
     if (ttValue) filteredData = filteredData.filter(item => item.ThonTo === ttValue);
     
-    // 3. Lọc theo Trạng thái Thanh Toán
     if (statusValue !== "") {
         const isPaid = statusValue === "true";
         filteredData = filteredData.filter(item => {
@@ -126,22 +153,20 @@ function searchData() {
         });
     }
 
-    currentPage = 1; // Luôn trả về trang 1 sau khi thực hiện tìm kiếm mới
+    currentPage = 1; 
     renderTable();
 }
 
-// CẬP NHẬT: LOGIC TRÍCH XUẤT DỮ LIỆU THEO TRANG
 function renderTable() {
     const tbody = document.getElementById('taxTableBody');
     tbody.innerHTML = "";
 
     if (!filteredData || filteredData.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">Không tìm thấy dữ liệu phù hợp</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;">Không tìm thấy dữ liệu phù hợp với địa bàn của bạn</td></tr>`;
         updatePaginationControls(0);
         return;
     }
 
-    // Tính toán dải chỉ số (index) cần cắt để hiển thị
     const startIndex = (currentPage - 1) * rowsPerPage;
     const endIndex = startIndex + rowsPerPage;
     const pageData = filteredData.slice(startIndex, endIndex);
@@ -159,6 +184,7 @@ function renderTable() {
             <td>${item.Ho || ''} ${item.Ten || ''}</td>
             <td>${item.ThonTo || ''}</td>
             <td>${item.PhuongXa || ''}</td>
+            <td><span style="background: #e0e7ff; color: #4338ca; padding: 2px 8px; border-radius: 4px; font-weight: bold; font-size:12px;">${item.Branch || 'N/A'}</span></td>
             <td>${item.SoTienThuThue ? Number(item.SoTienThuThue).toLocaleString('vi-VN') : 0} đ</td>
             <td>${statusText}</td>
         `;
@@ -168,13 +194,9 @@ function renderTable() {
     updatePaginationControls(filteredData.length);
 }
 
-// TÍNH NĂNG MỚI: ĐIỀU KHIỂN ĐÓNG/MỞ NÚT CHUYỂN TRANG
 function updatePaginationControls(totalItems) {
     const totalPages = Math.ceil(totalItems / rowsPerPage) || 1;
-    
     document.getElementById('pageInfo').innerText = `Trang ${currentPage} / ${totalPages}`;
-    
-    // Khóa nút điều hướng khi ở trang giới hạn đầu/cuối
     document.getElementById('btnPrev').disabled = (currentPage === 1);
     document.getElementById('btnNext').disabled = (currentPage === totalPages);
 }
