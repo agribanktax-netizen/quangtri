@@ -1,61 +1,60 @@
-/* --- PHẦN THIẾT LẬP CHUNG --- */
+/* RESET BOX MODEL */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
+
 body {
     background-color: #f8fafc;
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #334155;
-    padding: 20px;
-}
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
+    min-height: 100vh;
 }
 
-/* --- MÀN HÌNH ĐĂNG NHẬP ĐỘC LẬP (GLASSMORPHISM) --- */
+/* LỚP BỌC MÀN HÌNH ĐĂNG NHẬP */
 .login-wrapper {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 100%);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 9999;
+    z-index: 99999; /* Luôn trên cùng khi chưa ẩn */
 }
+
 #loginSection {
     max-width: 400px;
     width: 90%;
     background: #ffffff;
     padding: 40px 30px;
     border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(30, 41, 59, 0.12);
+    box-shadow: 0 10px 25px rgba(30, 41, 59, 0.15);
     border: 1px solid rgba(255, 255, 255, 0.8);
-    transition: all 0.3s ease;
-}
-#loginSection h2 {
     text-align: center;
+}
+
+#loginSection h2 {
     color: #1e293b;
     font-size: 24px;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
     font-weight: 700;
-    letter-spacing: 0.5px;
 }
+
 #loginSection .login-subtitle {
-    text-align: center;
     color: #64748b;
     font-size: 13px;
-    margin-bottom: 28px;
+    margin-bottom: 30px;
 }
+
 .input-group {
     margin-bottom: 20px;
     text-align: left;
 }
+
 .input-group label {
     display: block;
     margin-bottom: 6px;
@@ -63,41 +62,50 @@ body {
     font-size: 13px;
     font-weight: 600;
 }
+
 .input-group input {
     width: 100%;
-    padding: 12px 14px;
+    padding: 12px 16px;
     border: 1px solid #cbd5e1;
     border-radius: 8px;
-    font-size: 14px;
+    font-size: 15px;
     color: #334155;
     background-color: #f8fafc;
+    outline: none;
     transition: all 0.2s ease;
 }
+
 .input-group input:focus {
-    outline: none;
     border-color: #4f46e5;
     background-color: #ffffff;
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
 }
+
 #loginSection button {
     width: 100%;
-    padding: 13px;
+    padding: 14px;
     background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
-    color: #ffffff;
+    color: white;
     border: none;
     border-radius: 8px;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 600;
     cursor: pointer;
     box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
     transition: all 0.2s ease;
 }
+
 #loginSection button:hover {
     background: linear-gradient(135deg, #4338ca 0%, #3730a3 100%);
-    box-shadow: 0 8px 12px -3px rgba(79, 70, 229, 0.3);
 }
 
-/* --- GIAO DIỆN CHÍNH (MAIN SECTION) --- */
+/* CONTAINER MÀN HÌNH CHÍNH */
+.main-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 20px;
+}
+
 .main-header {
     display: flex;
     justify-content: space-between;
@@ -106,33 +114,41 @@ body {
     padding: 16px 24px;
     border-radius: 12px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
+
 .main-header h2 {
-    font-size: 20px;
+    font-size: 22px;
     color: #1e293b;
 }
+
 .user-info-box {
     display: flex;
     align-items: center;
     gap: 15px;
 }
+
 .user-name {
     font-size: 14px;
     font-weight: 600;
     color: #475569;
 }
-.btn-cancel {
+
+.btn-logout {
     background-color: #ef4444;
     color: white;
     border: none;
-    padding: 6px 14px;
+    padding: 8px 16px;
     border-radius: 6px;
     cursor: pointer;
     font-size: 13px;
+    font-weight: 600;
     transition: background 0.2s;
 }
-.btn-cancel:hover { background-color: #dc2626; }
+
+.btn-logout:hover {
+    background-color: #dc2626;
+}
 
 /* BỘ LỌC TÌM KIẾM */
 .filter-box {
@@ -144,8 +160,9 @@ body {
     flex-wrap: wrap;
     gap: 20px;
     align-items: flex-end;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
+
 .filter-item {
     display: flex;
     flex-direction: column;
@@ -153,45 +170,56 @@ body {
     flex: 1;
     min-width: 200px;
 }
+
 .filter-item label {
     font-size: 13px;
     font-weight: 600;
     color: #475569;
 }
+
 .filter-box select {
-    padding: 10px;
+    padding: 11px;
     border: 1px solid #e2e8f0;
-    border-radius: 6px;
+    border-radius: 8px;
     font-size: 14px;
     background-color: #f8fafc;
     outline: none;
+    color: #334155;
 }
+
 .btn-search {
-    padding: 10px 24px;
+    padding: 11px 28px;
     background-color: #10b981;
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     font-weight: 600;
     cursor: pointer;
-    height: 41px;
+    height: 43px;
+    font-size: 14px;
     transition: background 0.2s;
 }
-.btn-search:hover { background-color: #059669; }
 
-/* BẢNG DỮ LIỆU CHUẨN */
+.btn-search:hover {
+    background-color: #059669;
+}
+
+/* BẢNG DỮ LIỆU */
 .table-responsive {
     overflow-x: auto;
     background-color: #ffffff;
     border-radius: 12px;
     box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03);
+    border: 1px solid #e2e8f0;
 }
+
 table {
     width: 100%;
     border-collapse: collapse;
     text-align: left;
     font-size: 14px;
 }
+
 th {
     background-color: #f1f5f9;
     color: #475569;
@@ -199,27 +227,31 @@ th {
     font-weight: 600;
     border-bottom: 1px solid #e2e8f0;
 }
+
 td {
     padding: 14px 16px;
     border-bottom: 1px solid #f1f5f9;
     color: #334155;
 }
+
 tbody tr {
     cursor: pointer;
     transition: background 0.15s;
 }
+
 tbody tr:hover {
     background-color: #f8fafc;
 }
 
-/* THANH PHÂN TRANG */
+/* PHÂN TRANG */
 .pagination-box {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 12px;
+    gap: 15px;
     margin-top: 25px;
 }
+
 .pagination-box button {
     padding: 8px 16px;
     background-color: #ffffff;
@@ -227,26 +259,30 @@ tbody tr:hover {
     color: #475569;
     border-radius: 6px;
     cursor: pointer;
-    font-weight: 500;
+    font-weight: 600;
     font-size: 13px;
     transition: all 0.2s;
 }
+
 .pagination-box button:hover:not(:disabled) {
     background-color: #f1f5f9;
     color: #1e293b;
 }
+
 .pagination-box button:disabled {
     background-color: #e2e8f0;
     color: #94a3b8;
     cursor: not-allowed;
+    border-color: #e2e8f0;
 }
+
 .page-info {
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 700;
     color: #334155;
 }
 
-/* POPUP QR VÀ ĐIỀU KIỆN ẨN */
+/* MÀN HÌNH POPUP QR OVERLAY (FIXED TRÊN CÙNG) */
 .popup-overlay {
     position: fixed;
     top: 0;
@@ -257,8 +293,9 @@ tbody tr:hover {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 10000;
+    z-index: 100000; /* Đặt chỉ số cực cao để đè lên mọi thứ */
 }
+
 .popup-content {
     background-color: #ffffff;
     padding: 30px;
@@ -267,26 +304,71 @@ tbody tr:hover {
     max-width: 440px;
     text-align: center;
     box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+    position: relative;
 }
-.popup-content h3 { margin-bottom: 15px; color: #1e293b; }
-#qrInfo {
-    text-align: left; font-size: 14px; line-height: 1.6;
-    background: #f8fafc; padding: 12px; border-radius: 8px;
-    margin-bottom: 15px; border: 1px solid #e2e8f0;
-}
-.qr-img { width: 220px; height: 220px; margin: 10px auto; display: block; }
-.confirm-zone {
-    display: flex; align-items: center; justify-content: center;
-    gap: 10px; margin: 20px 0; padding: 10px;
-    background-color: #f0fdf4; border-radius: 6px; cursor: pointer;
-}
-.confirm-zone label { color: #166534; font-size: 13px; font-weight: 600; cursor: pointer; }
-.btn-popup-close {
-    width: 100%; padding: 11px; background-color: #64748b;
-    color: white; border: none; border-radius: 6px; cursor: pointer;
-}
-.btn-popup-close:hover { background-color: #475569; }
 
+.popup-content h3 {
+    margin-bottom: 15px;
+    color: #1e293b;
+    font-size: 18px;
+}
+
+#qrInfo {
+    text-align: left;
+    font-size: 14px;
+    line-height: 1.6;
+    background: #f8fafc;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #e2e8f0;
+}
+
+.qr-img {
+    width: 220px;
+    height: 220px;
+    margin: 10px auto;
+    display: block;
+}
+
+.confirm-zone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+    padding: 12px;
+    background-color: #f0fdf4;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.confirm-zone label {
+    color: #166534;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+}
+
+.btn-popup-close {
+    width: 100%;
+    padding: 12px;
+    background-color: #64748b;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.btn-popup-close:hover {
+    background-color: #475569;
+}
+
+/* CLASS ẨN PHẦN TỬ BẮT BUỘC */
 .hidden {
     display: none !important;
 }
