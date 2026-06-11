@@ -47,11 +47,21 @@
 <body>
 
 <div class="container">
-    <div id="loginSection" class="login-form">
-        <h2>Đăng nhập Hệ thống</h2>
-        <input type="text" id="loginUsername" placeholder="Tên đăng nhập (Username)" required>
-        <input type="password" id="loginPassword" placeholder="Mật khẩu (Password)" required>
-        <button onclick="loginWithUsernamePassword()">Đăng nhập</button>
+    <div id="loginSection">
+        <h2>HỆ THỐNG QUẢN LÝ</h2>
+        <div class="login-subtitle">Đăng nhập tài khoản cán bộ thu thuế địa bàn</div>
+        
+        <div class="input-group">
+            <label for="loginUsername">🔑 Tên đăng nhập (Username)</label>
+            <input type="text" id="loginUsername" placeholder="Nhập tài khoản của bạn..." required>
+        </div>
+        
+        <div class="input-group">
+            <label for="loginPassword">🔒 Mật khẩu (Password)</label>
+            <input type="password" id="loginPassword" placeholder="Nhập mật khẩu..." required>
+        </div>
+        
+        <button onclick="loginWithUsernamePassword()">Đăng nhập hệ thống</button>
     </div>
 
     <div id="mainSection" class="hidden">
