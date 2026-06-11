@@ -32,14 +32,17 @@ window.onload = function() {
 };
 
 function checkLoginStatus() {
+    const loginWrapper = document.getElementById('loginWrapper');
+    const mainSection = document.getElementById('mainSection');
+    
     if (currentUser) {
-        document.getElementById('loginSection').classList.add('hidden');
-        document.getElementById('mainSection').classList.remove('hidden');
+        if (loginWrapper) loginWrapper.classList.add('hidden'); // Ẩn hoàn toàn màn hình login nền xám
+        if (mainSection) mainSection.classList.remove('hidden'); // Hiện bảng dữ liệu thuế sạch sẽ
         document.getElementById('txtLoginUser').innerText = `👤 ${currentUser.username} (${currentUser.Branch})`;
         fetchTaxData(); 
     } else {
-        document.getElementById('loginSection').classList.remove('hidden');
-        document.getElementById('mainSection').classList.add('hidden');
+        if (loginWrapper) loginWrapper.classList.remove('hidden'); // Hiện màn hình login
+        if (mainSection) mainSection.classList.add('hidden'); // Ẩn bảng dữ liệu thuế
         document.getElementById('qrPopup').classList.add('hidden'); 
     }
 }
