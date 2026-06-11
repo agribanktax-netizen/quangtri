@@ -6,17 +6,19 @@
     <title>Quản Lý Thu Thuế Đất</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Bổ sung một chút style cho phần phân trang */
+        /* CSS bổ sung cho thanh phân trang */
         .pagination-box {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 10px;
-            margin-top: 15px;
+            gap: 12px;
+            margin-top: 20px;
+            padding-top: 10px;
         }
         .pagination-box button {
-            min-width: 40px;
-            padding: 6px 12px;
+            min-width: 45px;
+            padding: 8px 14px;
+            margin: 0;
         }
         .pagination-box button:disabled {
             background-color: #cbd5e1;
@@ -27,6 +29,8 @@
             font-size: 14px;
             font-weight: 600;
             color: #334155;
+            min-width: 100px;
+            text-align: center;
         }
     </style>
 </head>
@@ -85,9 +89,9 @@
         </table>
 
         <div class="pagination-box">
-            <button onclick="prevPage()" id="btnPrev">◀</button>
+            <button onclick="prevPage()" id="btnPrev">◀ Trang trước</button>
             <span id="pageInfo" class="page-info">Trang 1 / 1</span>
-            <button onclick="nextPage()" id="btnNext">▶</button>
+            <button onclick="nextPage()" id="btnNext">Trang sau ▶</button>
         </div>
     </div>
 </div>
