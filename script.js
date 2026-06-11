@@ -1,6 +1,6 @@
 // CẤU HÌNH NGÂN HÀNG ĐÍCH
-const BANK_BIN = "VBA"; // VBA là mã chuẩn của Agribank
-const BANK_ACCOUNT = "3900205361940"; // Số tài khoản nhận tiền
+const BANK_BIN = "VBA"; 
+const BANK_ACCOUNT = "3900205361940"; 
 
 const firebaseConfig = {
     apiKey: "AIzaSyAOSKLNPXp-s40iJNYYzdEWDnQDFoa6x_Q",
@@ -17,14 +17,14 @@ const auth = firebase.auth();
 const db = firebase.database();
 
 let allData = [];
-let filteredData = []; // Lưu trữ dữ liệu sau khi đã lọc để phục vụ phân trang
+let filteredData = []; // Mảng chứa dữ liệu sau khi lọc
 let currentSelectedCustomerId = null; 
 
-// CẤU HÌNH PHÂN TRANG
+// CẤU HÌNH PHÂN TRANG (Mặc định 10 dòng/trang)
 let currentPage = 1;
 const rowsPerPage = 10;
 
-// LẮNG NGHE TRẠNG THÁI ĐĂNG NHẬP ĐỂ LẤY TÊN USER
+// LẮNG NGHE TRẠNG THÁI ĐĂNG NHẬP
 auth.onAuthStateChanged((user) => {
     try {
         if (user) {
@@ -107,14 +107,17 @@ function updateThonToCombobox() {
 function searchData() {
     const pxValue = document.getElementById('filterPhuongXa').value;
     const ttValue = document.getElementById('filterThonTo').value;
-    const statusValue = document.getElementById('filterTrangThai').value; // Lấy giá trị bộ lọc trạng thái
+    const statusValue = document.getElementById('filterTrangThai').value; 
 
     filteredData = allData;
 
+    // 1. Lọc theo Phường/Xã
     if (pxValue) filteredData = filteredData.filter(item => item.PhuongXa === pxValue);
+    
+    // 2. Lọc theo Thôn/Tổ
     if (ttValue) filteredData = filteredData.filter(item => item.ThonTo === ttValue);
     
-    // Lọc theo trạng thái Đã/Chưa thanh toán
+    // 3. Lọc theo Trạng thái Thanh Toán
     if (statusValue !== "") {
         const isPaid = statusValue === "true";
         filteredData = filteredData.filter(item => {
@@ -123,11 +126,11 @@ function searchData() {
         });
     }
 
-    currentPage = 1; // Khởi tạo lại về trang 1 sau khi tìm kiếm
+    currentPage = 1; // Luôn trả về trang 1 sau khi thực hiện tìm kiếm mới
     renderTable();
 }
 
-// CẬP NHẬT: LOGIC RENDER TÍCH HỢP PHÂN TRANG (10 dòng / trang)
+// CẬP NHẬT: LOGIC TRÍCH XUẤT DỮ LIỆU THEO TRANG
 function renderTable() {
     const tbody = document.getElementById('taxTableBody');
     tbody.innerHTML = "";
@@ -138,7 +141,7 @@ function renderTable() {
         return;
     }
 
-    // Tính toán vị trí dòng bắt đầu và kết thúc của trang hiện tại
+    // Tính toán dải chỉ số (index) cần cắt để hiển thị
     const startIndex = (currentPage - 1) * rowsPerPage;
     const endIndex = startIndex + rowsPerPage;
     const pageData = filteredData.slice(startIndex, endIndex);
@@ -165,13 +168,13 @@ function renderTable() {
     updatePaginationControls(filteredData.length);
 }
 
-// CHỨC NĂNG MỚI: CẬP NHẬT TRẠNG THÁI THANH ĐIỀU HƯỚNG TRANG
+// TÍNH NĂNG MỚI: ĐIỀU KHIỂN ĐÓNG/MỞ NÚT CHUYỂN TRANG
 function updatePaginationControls(totalItems) {
     const totalPages = Math.ceil(totalItems / rowsPerPage) || 1;
     
     document.getElementById('pageInfo').innerText = `Trang ${currentPage} / ${totalPages}`;
     
-    // Bật/Tắt nút Prev và Next tùy thuộc vào trang hiện tại
+    // Khóa nút điều hướng khi ở trang giới hạn đầu/cuối
     document.getElementById('btnPrev').disabled = (currentPage === 1);
     document.getElementById('btnNext').disabled = (currentPage === totalPages);
 }
